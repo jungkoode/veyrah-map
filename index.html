@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Veyrah Sector Map</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
+            font-family: 'Courier New', monospace;
+            color: #e0e0e0;
+            overflow-x: auto;
+        }
+
+```
+    .map-container {
+        width: 1200px;
+        height: 800px;
+        position: relative;
+        background: radial-gradient(ellipse at center, #1a1a2e 0%, #0f0f1e 100%);
+        border: 2px solid #444;
+        margin: 0 auto;
+        border-radius: 10px;
+        box-shadow: 0 0 30px rgba(100, 150, 255, 0.3);
+    }
+
+    .sector {
+        position: absolute;
+        border: 2px solid;
+        border-radius: 8px;
+        padding: 10px;
+        text-align: center;
+        font-weight: bold;
+        font-size: 12px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        backdrop-filter: blur(5px);
+    }
+
+    .sector:hover {
+        transform: scale(1.05);
+        box-shadow: 0 0 20px currentColor;
+    }
+
+    .valis-core {
+        top: 150px;
+        left: 500px;
+        width: 200px;
+        height: 120px;
+        background: linear-gradient(135deg, rgba(100, 150, 255, 0.3), rgba(50, 100, 200, 0.2));
+        border-color: #6496ff;
+        color: #6496ff;
+    }
+
+    .hollow-crest {
+        top: 300px;
+        left: 250px;
+        width: 180px;
+        height: 160px;
+        background: linear-gradient(135deg, rgba(200, 150, 100, 0.3), rgba(150, 100, 50, 0.2));
+        border-color: #c8966b;
+        color: #c8966b;
+    }
+
+    .mournwell-basin {
+        top: 500px;
+        left: 600px;
+        width: 220px;
+        height: 100px;
+        background: linear-gradient(135deg, rgba(150, 100, 200, 0.3), rgba(100, 50, 150, 0.2));
+        border-color: #9664c8;
+        color: #9664c8;
+    }
+
+    .virex-shard {
+        top: 100px;
+        left: 800px;
+        width: 160px;
+        height: 140px;
+        background: linear-gradient(135deg, rgba(200, 100, 100, 0.3), rgba(150, 50, 50, 0.2));
+        border-color: #c86464;
+        color: #c86464;
+    }
+
+    .scorch-rift {
+        top: 50px;
+        left: 50px;
+        width: 180px;
+        height: 200px;
+        background: linear-gradient(135deg, rgba(255, 100, 50, 0.3), rgba(200, 50, 25, 0.2));
+        border-color: #ff6432;
+        color: #ff6432;
+        border-style: dashed;
+    }
+
+    .druin-fields {
+        top: 300px;
+        left: 50px;
+        width: 150px;
+        height: 180px;
+        background: linear-gradient(135deg, rgba(150, 150, 150, 0.3), rgba(100, 100, 100, 0.2));
+        border-color: #969696;
+        color: #969696;
+        border-style: dashed;
+    }
+
+    .cruxwater-spiral {
+        top: 550px;
+        left: 200px;
+        width: 200px;
+        height: 120px;
+        background: linear-gradient(135deg, rgba(100, 200, 150, 0.3), rgba(50, 150, 100, 0.2));
+        border-color: #64c896;
+        color: #64c896;
+        border-style: dashed;
+    }
+
+    .aurora-storms {
+        position: absolute;
+        top: 10px;
+        left: 300px;
+        right: 300px;
+        height: 40px;
+        background: linear-gradient(90deg, 
+            rgba(100, 150, 255, 0.1) 0%, 
+            rgba(200, 100, 255, 0.2) 25%, 
+            rgba(100, 255, 200, 0.2) 50%, 
+            rgba(255, 200, 100, 0.2) 75%, 
+            rgba(100, 150, 255, 0.1) 100%);
+        border: 1px solid rgba(150, 150, 255, 0.5);
+        border-radius: 20px;
+        text-align: center;
+        line-height: 40px;
+        color: #96c8ff;
+        animation: aurora-pulse 3s infinite;
+    }
+
+    @keyframes aurora-pulse {
+        0%, 100% { opacity: 0.7; }
+        50% { opacity: 1; }
+    }
+
+    .legend {
+        position: absolute;
+        bottom: 20px;
+        left: 20px;
+        background: rgba(0, 0, 0, 0.7);
+        padding: 15px;
+        border-radius: 8px;
+        border: 1px solid #444;
+    }
+
+    .legend h3 {
+        margin-top: 0;
+        color: #fff;
+        font-size: 14px;
+    }
+
+    .legend-item {
+        display: flex;
+        align-items: center;
+        margin: 5px 0;
+        font-size: 11px;
+    }
+
+    .legend-color {
+        width: 20px;
+        height: 15px;
+        margin-right: 10px;
+        border: 1px solid;
+        border-radius: 3px;
+    }
+
+    .consortium { border-color: #6496ff; background: rgba(100, 150, 255, 0.3); }
+    .verge { border-color: #ff6432; background: rgba(255, 100, 50, 0.3); }
+
+    .pulse-rail {
+        position: absolute;
+        height: 3px;
+        background: linear-gradient(90deg, transparent, #6496ff, transparent);
+        animation: pulse-flow 2s infinite;
+    }
+
+    .rail-1 {
+        top: 210px;
+        left: 450px;
+        width: 120px;
+        transform: rotate(15deg);
+    }
+
+    .rail-2 {
+        top: 280px;
+        left: 430px;
+        width: 100px;
+        transform: rotate(-30deg);
+    }
+
+    .rail-3 {
+        top: 380px;
+        left: 650px;
+        width: 80px;
+        transform: rotate(45deg);
+    }
+
+    @keyframes pulse-flow {
+        0% { opacity: 0.3; transform: scaleX(0.5); }
+        50% { opacity: 1; transform: scaleX(1); }
+        100% { opacity: 0.3; transform: scaleX(0.5); }
+    }
+
+    .title {
+        text-align: center;
+        font-size: 24px;
+        color: #fff;
+        margin-bottom: 20px;
+        text-shadow: 0 0 10px rgba(100, 150, 255, 0.5);
+    }
+
+    .sector-details {
+        position: absolute;
+        bottom: 20px;
+        right: 20px;
+        background: rgba(0, 0, 0, 0.8);
+        padding: 15px;
+        border-radius: 8px;
+        border: 1px solid #444;
+        width: 250px;
+        font-size: 11px;
+        line-height: 1.4;
+    }
+
+    .details-title {
+        color: #fff;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+</style>
+```
+
+</head>
+<body>
+    <div class="title">VEYRAH PLANETARY SECTORS</div>
+
+```
+<div class="map-container">
+    <div class="aurora-storms">Aurora Storm Bands</div>
+    
+    <!-- Consortium Sectors -->
+    <div class="sector valis-core" onclick="showDetails('valis')">
+        <div>SECTOR I</div>
+        <div>VALIS CORE</div>
+        <div style="font-size: 10px; margin-top: 5px;">Consortium Capital</div>
+        <div style="font-size: 10px;">Epitaph Citadel</div>
+    </div>
+
+    <div class="sector hollow-crest" onclick="showDetails('hollow')">
+        <div>SECTOR II</div>
+        <div>HOLLOW CREST</div>
+        <div style="font-size: 10px; margin-top: 5px;">Mining Tunnels</div>
+        <div style="font-size: 10px;">Rebel Territory</div>
+    </div>
+
+    <div class="sector mournwell-basin" onclick="showDetails('mournwell')">
+        <div>SECTOR III</div>
+        <div>MOURNWELL BASIN</div>
+        <div style="font-size: 10px; margin-top: 5px;">Agricultural Zone</div>
+        <div style="font-size: 10px;">Labor Camps</div>
+    </div>
+
+    <div class="sector virex-shard" onclick="showDetails('virex')">
+        <div>SECTOR IV</div>
+        <div>VIREX SHARD</div>
+        <div style="font-size: 10px; margin-top: 5px;">Bio-laboratories</div>
+        <div style="font-size: 10px;">Virus Research</div>
+    </div>
+
+    <!-- Verge Wastes -->
+    <div class="sector scorch-rift" onclick="showDetails('scorch')">
+        <div>SCORCH RIFT</div>
+        <div style="font-size: 10px; margin-top: 5px;">Volcanic Wastes</div>
+        <div style="font-size: 10px;">Bandit Territory</div>
+        <div style="font-size: 10px;">Red Verge Base</div>
+    </div>
+
+    <div class="sector druin-fields" onclick="showDetails('druin')">
+        <div>DRUIN FIELDS</div>
+        <div style="font-size: 10px; margin-top: 5px;">Tech Graveyards</div>
+        <div style="font-size: 10px;">Salvage Zones</div>
+        <div style="font-size: 10px;">Fallow Teeth</div>
+    </div>
+
+    <div class="sector cruxwater-spiral" onclick="showDetails('crux')">
+        <div>CRUXWATER SPIRAL</div>
+        <div style="font-size: 10px; margin-top: 5px;">Toxic Lakes</div>
+        <div style="font-size: 10px;">Floating Settlements</div>
+    </div>
+
+    <!-- Pulse Rail Lines -->
+    <div class="pulse-rail rail-1"></div>
+    <div class="pulse-rail rail-2"></div>
+    <div class="pulse-rail rail-3"></div>
+
+    <div class="legend">
+        <h3>Territory Control</h3>
+        <div class="legend-item">
+            <div class="legend-color consortium"></div>
+            <span>Consortium Sectors</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-color verge"></div>
+            <span>Verge Wastes (Uncontrolled)</span>
+        </div>
+        <div style="margin-top: 10px; font-size: 10px;">
+            <div>━ Pulse Rail Transit</div>
+            <div>┄ Contested Boundaries</div>
+        </div>
+    </div>
+
+    <div class="sector-details" id="sector-info">
+        <div class="details-title">Sector Information</div>
+        <div id="details-content">Click on any sector to view detailed information about population, resources, and strategic importance.</div>
+    </div>
+</div>
+
+<script>
+    const sectorData = {
+        valis: {
+            title: "VALIS CORE - Sector I",
+            content: `
+            <strong>Population:</strong> 2.3 million<br>
+            <strong>Status:</strong> Consortium Capital<br>
+            <strong>Key Features:</strong><br>
+            • Epitaph Citadel (Transference HQ)<br>
+            • Warden's Spire (Namjoon's residence)<br>
+            • Threshold Gates (sector checkpoints)<br>
+            • Atmospheric regulation systems<br>
+            <strong>Security:</strong> Maximum<br>
+            <strong>Environment:</strong> Artificial climate control, constant aurora storms overhead
+            `
+        },
+        hollow: {
+            title: "HOLLOW CREST - Sector II",
+            content: `
+            <strong>Population:</strong> 8.7 million<br>
+            <strong>Status:</strong> Mining/Rebel Territory<br>
+            <strong>Key Features:</strong><br>
+            • 60-level tunnel system<br>
+            • Shroud hideouts (Levels 40-50)<br>
+            • Mining operations<br>
+            • Underground medical facilities<br>
+            <strong>Security:</strong> Heavy surveillance<br>
+            <strong>Environment:</strong> Subterranean, artificial lighting, dust and chemical contamination
+            `
+        },
+        mournwell: {
+            title: "MOURNWELL BASIN - Sector III",
+            content: `
+            <strong>Population:</strong> 12.1 million<br>
+            <strong>Status:</strong> Agricultural Labor Zone<br>
+            <strong>Key Features:</strong><br>
+            • Massive crop plantations<br>
+            • Processing facilities<br>
+            • Labor camps (where Y/N was held)<br>
+            • Chemical irrigation systems<br>
+            <strong>Security:</strong> Work camp protocols<br>
+            <strong>Environment:</strong> Toxic soil, extreme temperature shifts, purple-black contamination
+            `
+        },
+        virex: {
+            title: "VIREX SHARD - Sector IV",
+            content: `
+            <strong>Population:</strong> 850,000<br>
+            <strong>Status:</strong> Research Facility<br>
+            <strong>Key Features:</strong><br>
+            • Veris virus laboratories<br>
+            • Genetic modification facilities<br>
+            • Containment chambers<br>
+            • Dr. Webb's primary lab<br>
+            <strong>Security:</strong> Biological containment<br>
+            <strong>Environment:</strong> Sterile, radiation exposure, chemical sterilization
+            `
+        },
+        scorch: {
+            title: "SCORCH RIFT - Verge Territory",
+            content: `
+            <strong>Population:</strong> 2.8 million (nomadic)<br>
+            <strong>Status:</strong> Uncontrolled Wasteland<br>
+            <strong>Key Features:</strong><br>
+            • Active volcanic activity<br>
+            • Red Verge strongholds<br>
+            • Ash markets (mobile)<br>
+            • Thermal warrens<br>
+            <strong>Security:</strong> Clan-controlled<br>
+            <strong>Environment:</strong> Extreme heat, toxic gases, ash storms, lava flows
+            `
+        },
+        druin: {
+            title: "DRUIN FIELDS - Verge Territory",
+            content: `
+            <strong>Population:</strong> 1.2 million (scavengers)<br>
+            <strong>Status:</strong> Uncontrolled Salvage Zone<br>
+            <strong>Key Features:</strong><br>
+            • Pre-Collapse tech ruins<br>
+            • Salvage operations<br>
+            • Fallow Teeth territory<br>
+            • Signal Hill communications<br>
+            <strong>Security:</strong> Salvager gangs<br>
+            <strong>Environment:</strong> Electromagnetic storms, radiation pockets, metal debris
+            `
+        },
+        crux: {
+            title: "CRUXWATER SPIRAL - Verge Territory",
+            content: `
+            <strong>Population:</strong> 900,000 (floating)<br>
+            <strong>Status:</strong> Uncontrolled Water Territory<br>
+            <strong>Key Features:</strong><br>
+            • Toxic water spirals<br>
+            • Floating settlements<br>
+            • Water purification systems<br>
+            • Smuggling routes<br>
+            <strong>Security:</strong> Maritime clans<br>
+            <strong>Environment:</strong> Chemical contamination, perpetual fog, unstable platforms
+            `
+        }
+    };
+
+    function showDetails(sector) {
+        const info = sectorData[sector];
+        if (info) {
+            document.getElementById('details-content').innerHTML = `
+                <div class="details-title">${info.title}</div>
+                ${info.content}
+            `;
+        }
+    }
+</script>
+```
+
+</body>
+</html>
